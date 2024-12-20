@@ -8,7 +8,8 @@
 
 > A sleek and modern web application for managing SIM card porting details between different telecom providers.
 
-![Project Preview](https://via.placeholder.com/800x400?text=SIM+Port+Details+Manager)
+![Project Preview]
+<img src="sim.jpg">
 
 ## ✨ Features
 
@@ -41,8 +42,8 @@
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/sim-port-details.git
-cd sim-port-details
+git clone https://github.com/wing2rah/Sim-port.git
+cd Sim-port
 ```
 
 2. Configure Supabase:
