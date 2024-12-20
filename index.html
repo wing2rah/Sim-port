@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sim port detail by rahul</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .form-container input, .form-container select, .form-container button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .form-container button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+        .data-container {
+            width: 400px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .data-container h3 {
+            color: #333;
+        }
+        .data-container ul {
+            list-style: none;
+            padding: 0;
+        }
+        .data-container li {
+            background: #f9f9f9;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Beautiful Form</h2>
+        <form id="dataForm">
+            <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" required>
+            <input type="text" id="simNumber" name="simNumber" placeholder="SIM Number" required>
+            <input type="date" id="date" name="date" required>
+            <select id="from" name="from" required>
+                <option value="" disabled selected>Select From</option>
+                <option value="airtel">Airtel</option>
+                <option value="jio">Jio</option>
+                <option value="vi">Vi</option>
+            </select>
+            <select id="to" name="to" required>
+                <option value="" disabled selected>Select To</option>
+                <option value="airtel">Airtel</option>
+                <option value="jio">Jio</option>
+                <option value="vi">Vi</option>
+            </select>
+            <button type="button" onclick="addData()">Add</button>
+            <button type="button" onclick="fetchData()">Fetch</button>
+            <button type="button" onclick="deleteData()">Delete</button>
+        </form>
+    </div>
+    <div class="data-container" id="dataContainer">
+        <h3>Fetched Data</h3>
+        <ul id="dataList"></ul>
+    </div>
+    
+    <script>
+        const SUPABASE_URL = 'https://iypxhfjaxfdxfoubnefm.supabase.co';
+        const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5cHhoZmpheGZkeGZvdWJuZWZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ1NzQwOTksImV4cCI6MjA1MDE1MDA5OX0.3tJFpY7Xth-NGA55hcqCTDnL8bHZbxKsiSBHP6pZihM';
+        const { createClient } = supabase;
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_API_KEY);
+
+        async function addData() {
+            const formData = new FormData(document.getElementById('dataForm'));
+            const data = {
+                phoneNumber: formData.get('phoneNumber'),
+                simNumber: formData.get('simNumber'),
+                date: formData.get('date'),
+                from: formData.get('from'),
+                to: formData.get('to')
+            };
+            let { error } = await _supabase
+                .from('datasim')
+                .insert([data]);
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                alert('Data added successfully!');
+                document.getElementById('dataForm').reset();
+            }
+        }
+
+        async function fetchData() {
+            let { data, error } = await _supabase
+                .from('datasim')
+                .select('*');
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                const dataList = document.getElementById('dataList');
+                dataList.innerHTML = '';
+                data.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Phone: ${item.phoneNumber}, SIM: ${item.simNumber}, Date: ${item.date}, From: ${item.from}, To: ${item.to}`;
+                    dataList.appendChild(listItem);
+                });
+            }
+        }
+
+        async function deleteData() {
+            const formData = new FormData(document.getElementById('dataForm'));
+            const phoneNumber = formData.get('phoneNumber');
+            let { error } = await _supabase
+                .from('datasim')
+                .delete()
+                .eq('phoneNumber', phoneNumber);
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                alert('Data deleted successfully!');
+            }
+        }
+    </script>
+</body>
+</html>
