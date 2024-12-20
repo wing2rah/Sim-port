@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIM Port Details</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #f8fafc;
+            --text-color: #1e293b;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-container h2 {
+            color: var(--primary-color);
+            font-size: 1.75rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        button {
+            padding: 0.75rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-add {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-fetch {
+            background: #22c55e;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .data-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-container h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        #dataList {
+            list-style: none;
+        }
+
+        #dataList li {
+            background: var(--secondary-color);
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-container, .data-container {
+                padding: 1.5rem;
+            }
+
+            input, select, button {
+                padding: 0.875rem;
+            }
+
+            #dataList li {
+                font-size: 0.8rem;
+                padding: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>SIM Port Details</h2>
+            <form id="dataForm">
+                <div class="input-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number" required>
+                </div>
+                <div class="input-group">
+                    <label for="simNumber">SIM Number</label>
+                    <input type="text" id="simNumber" name="simNumber" placeholder="Enter SIM number" required>
+                </div>
+                <div class="input-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+                <div class="input-group">
+                    <label for="from">From Provider</label>
+                    <select id="from" name="from" required>
+                        <option value="" disabled selected>Select provider</option>
+                        <option value="airtel">Airtel</option>
+                        <option value="jio">Jio</option>
+                        <option value="vi">Vi</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="to">To Provider</label>
+                    <select id="to" name="to" required>
+                        <option value="" disabled selected>Select provider</option>
+                        <option value="airtel">Airtel</option>
+                        <option value="jio">Jio</option>
+                        <option value="vi">Vi</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button type="button" onclick="addData()" class="btn-add">Add</button>
+                    <button type="button" onclick="fetchData()" class="btn-fetch">Fetch</button>
+                    <button type="button" onclick="deleteData()" class="btn-delete">Delete</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="data-container">
+            <h3>Records</h3>
+            <ul id="dataList"></ul>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://iypxhfjaxfdxfoubnefm.supabase.co';
+        const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5cHhoZmpheGZkeGZvdWJuZWZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ1NzQwOTksImV4cCI6MjA1MDE1MDA5OX0.3tJFpY7Xth-NGA55hcqCTDnL8bHZbxKsiSBHP6pZihM';
+        const { createClient } = supabase;
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_API_KEY);
+
+        async function addData() {
+            const formData = new FormData(document.getElementById('dataForm'));
+            const data = {
+                phoneNumber: formData.get('phoneNumber'),
+                simNumber: formData.get('simNumber'),
+                date: formData.get('date'),
+                from: formData.get('from'),
+                to: formData.get('to')
+            };
+            let { error } = await _supabase
+                .from('datasim')
+                .insert([data]);
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                alert('Data added successfully!');
+                document.getElementById('dataForm').reset();
+            }
+        }
+
+        async function fetchData() {
+            let { data, error } = await _supabase
+                .from('datasim')
+                .select('*');
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                const dataList = document.getElementById('dataList');
+                dataList.innerHTML = '';
+                data.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <strong>Phone:</strong> ${item.phoneNumber}<br>
+                        <strong>SIM:</strong> ${item.simNumber}<br>
+                        <strong>Date:</strong> ${item.date}<br>
+                        <strong>From:</strong> ${item.from}<br>
+                        <strong>To:</strong> ${item.to}
+                    `;
+                    dataList.appendChild(listItem);
+                });
+            }
+        }
+
+        async function deleteData() {
+            const formData = new FormData(document.getElementById('dataForm'));
+            const phoneNumber = formData.get('phoneNumber');
+            let { error } = await _supabase
+                .from('datasim')
+                .delete()
+                .eq('phoneNumber', phoneNumber);
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                alert('Data deleted successfully!');
+                document.getElementById('dataForm').reset();
+                fetchData();
+            }
+        }
+    </script>
+</body>
+</html>
